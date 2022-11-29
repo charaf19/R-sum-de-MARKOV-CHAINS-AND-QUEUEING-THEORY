@@ -1,0 +1,206 @@
+
+  \documentclass[a4paper,12pt]{report}
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{geometry}
+  \geometry{a4paper}
+  \usepackage[francais]{babel}
+  \usepackage{amsfonts,amsmath,amssymb,mathrsfs}
+  \usepackage{graphicx}
+  \usepackage{xcolor}
+  \usepackage{titlesec}
+  \usepackage{fancybox}
+  %\usepackage{tgbonum}
+  \usepackage{pifont} %ding{N°}
+  %\usepackage{frcursive} %artistique ecirture cursive
+  \usepackage{fancyhdr}  %modification des hauts et des bas de page
+  \pagestyle{fancy}
+  \usepackage[tikz]{bclogo} %jouler boites
+ % \pagestyle{fancy}    %modification des hauts et des bas de page
+ \lhead{ }
+  \everymath{\displaystyle}
+  %\pagestyle{empty}
+  %\usepackage[Glenn]{fncychap}
+  \usepackage{amsthm}
+%\usepackage[Conny]{fncychap}
+\usepackage{xpatch}
+\makeatletter
+\xpatchcmd{\@thm}{\thm@headpunct{.}}{\thm@headpunct{}}{}{}
+\makeatother
+\renewcommand{\footrulewidth}{0.4pt}
+\newtheorem{theorem}{Théorème}[section]
+\newtheorem*{proposition}{Proposition:}
+\newtheorem{propriétés}[theorem]{Propriétés}
+\newtheorem*{definition}{Définition :}
+\newtheorem{lemme}[theorem]{Lemme}
+\newtheorem{corollaire}[theorem]{Corollaire}
+\newtheorem*{remarque}{Remarque:}
+\newtheorem{exemple}[theorem]{Exemple}
+\newtheorem{exemples}[theorem]{Exemples}
+\newenvironment{preuve}[1][Preuve ]{\noindent \textbf{#1 : \newline} }{\ \rule{0.5em}{0.5em}}
+\renewcommand{\thechapter}{\Roman{chapter})}
+\renewcommand{\thesection}{\Roman{section})}
+\setlength{\columnseprule}{0.5pt}
+\geometry{margin={1 in, 1.25 in}}
+\setlength{\parskip}{0.5em}
+\renewcommand{\baselinestretch}{1.2}
+\def\chaptername{chapitre}
+\begin{document}
+
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+\centering
+\includegraphics[width=8cm]{fpo.jpg}\\[1cm] 
+\center 
+\textsc{\LARGE Modélisation Stochastique}\\[1.5cm]
+\textsc{\Large MASD}\\[0.5cm] 
+\makeatletter
+\HRule \\[0.9cm]
+{ \large \bfseries Résumé d'article:
+\\
+Chaines de Markov et la Théorie des queues
+}\\[0.4cm] 
+\HRule \\[2cm]
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} 
+\emph{Préparé par:}
+\begin{itemize}
+\item[•] Moha GOURY
+\item[•] Charaf HAMIDI
+\end{itemize}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright}
+Soumettre à:
+\begin{itemize}
+\item[•]Prof. Khalid AKHLIL
+\end{itemize}
+\end{flushright}
+\end{minipage}\\[2cm]
+\makeatother
+\vfill 
+\end{titlepage}
+
+\tableofcontents
+\fancyhead{} 
+\fancyhead[RO,LE]{\textbf{Modélisation Stocastique}}
+\newpage
+\section{les processus stochastic et chaine de markov finie}
+Dans cette partie nous allons voir la définition d'un processus stochastique d'une manière générale et processus stochastique discret particulièrement  , en entamant la chaine de markov finie à titre d'exemple.
+Après la définition de chaine de markov, on va aborder sa représentation matricielle,toute en exploitant la dernière afin de déterminer la distribution des probabilités de passer dans un état $i$ à un état $j$ dans n pas de temps.
+\subsection{processus stochastique :}
+\begin{definition}\ \\
+Soit $T$ un ensemble et $t\in T $ un paramètre(temps).\\
+soit $X(t)$ une variable aléatoire $\forall t \in T$. Donc l'ensemble des variables aléatoires  $\{X(t)\quad t \in T\}$ est processus stochastique.
+\end{definition}
+\begin{itemize}
+\item[•]$X(t)$ l'état du processus stochastique dans un instant $t$.
+\item[•] Si $T$ est ensemble dénombrable \( T=\mathbb{N} \)  alors,on dit que le processus est à temps discret.\\Si non \((T=\mathbb{R}\quad ou\quad\mathbb{R}^n\)) alors on dit que le processus est à temps continue.
+\end{itemize}
+\subsection{Chaine de Markov}
+\begin{definition}\ \\
+Un processus stochastique est appelé une chaine de Markov si pour tout instant $n \in \mathbb{N}$,pour chaque état dans $I=(i_0,i_1,...,i_n)$, on a :
+\[ P(X_n=i_n|X_0=i_0,...,X_{n-1}=i_{n-1})=P(X_n=i_n|X_{n-1}=i_{n-1})\]
+\end{definition}
+\begin{itemize}
+\item[•]Autrement dit :c'est à partir de l'état présent,on peut prédire l'état future sans consulter les états passés 
+\item[•]On appelle la probabilité conditionnelle suivante $P(X_n=j|X_{n-1}=i)$, $i,j \in I$, la probabilité de transition de l'état $i$ à l'état $j$, on la note $p_{ij}(n)$.
+\item[•]Une chaine de Markov est dite homogène si la probabilité de transition $p_{ij}$ ne dépend pas de $n$, c'est à dire que $P(X_{n+m}=j|X_{n+m-1}=i)=P(X_{n+1}=j|X_{n}=i)$
+\end{itemize}
+\subsubsection*{Matrice de transition }
+A partir des probabilités de transition, On peut construire une matrice $P$ pour une chaine de Markov.
+Cette matrice a des propriétés suivantes :
+\begin{itemize}
+\item[•]$P$ est une matrice carrée d'ordre $N$x$N$(nombre des états) dont ses éléments $p_{ij}$ sont des probabilités de passer de l'état $i$ à l'état $j$, sachant que :
+
+\[ 0\leq p_{ij}\leq 1 \quad 1\leq i,j\leq N \].
+\[\sum_{j=1}^{N} p_{ij}=1\].
+
+\end{itemize}
+A partir de cette matrice qu'on a définit en dessus, on peut calculer la probabilité de passer dans un état $i$ à un état $j$ en un certain temps n en utilisant la proposition suivante:
+\begin{proposition}\ \\
+La probabilité de transition d'un état $i$ à un état $j$ dans le temps n est donnée par: $p_{ij}^n$
+\end{proposition}
+\subsubsection{Autre notions concernant chaine de Markov}
+\begin{definition}\ \\
+Deux états $i$ et $j$ dans une chaine de Markov se communiquent si seulement si :
+\[ \exists m,n > 0 \text{ tel que } p_m(i,j)> 0 \text{ et }p_n(j,i)> 0 \]
+\end{definition}
+\begin{definition}\ \\
+Une chaine de Markov est irréductible si :
+$\forall i,j ,\exists n \text{ avec } p_n(i,j)>0$
+\end{definition}
+\underline{Autrement dit :} \\
+La chaine de Markov est irréductible si elle a seulement une seule classe de communication.
+\subsection{Processus de poisson :}
+  Un processus de poisson est processus de comptage de l'occurrence d'un phénomène durant un certain intervalle du temps.
+\begin{definition}\ \\
+Formellement un processus $\{ N(t),\qqaud t\geq 0 \text{ avec } N(0)=0 \}$ est appelé processus de poisson d'intensité $\lambda >0$ s'il vérifie les conditions suivantes :
+\begin{itemize}
+\item[i)]La probabilité d'une occurrence dans un petit intervalle de temps est proportionnelle à la longueur de cet intervalle(i.e)  \[P(N_{t+\Delta t}-N_t =1)=\lambda \Delta t+o(\Delta t)\]
+\item[ii)]La probabilité qu'il y ait plus d'une occurrence dans un petit intervalle de temps est négligeable(i.e)
+\[P(N_{t+\Delta t}-N_t >1)=o(\Delta t)\]
+\item[iii)]Les nombres d'occurrences dans des intervalles de temps disjoints sont indépendants.(ie)
+$\forall t_1\leq t_2\leq...\leq t_n \quad N_{t_2-t_1},...,N_{t_n-t_{n-1}}$ sont des variables aléatoires indépendantes  
+\end{itemize}
+\end{definition}
+\begin{remarque}\ \\
+D'après (i) et (ii), on en peut déduire: 
+$P(N_{t+\Delta t}-N_t =0)=1-\lambda \Delta t+o(\Delta t)$
+\end{remarque}
+ En utilisant les trois conditions qui définissent le processus de poisson et le raisonnement par récurrence ainsi les équations différentielles ordinaires d'ordre 1 ,on en peut déduire la distribution de probabilité concernant le processus de poisson par la proposition suivante :
+ \begin{proposition}\ \\
+ Pour tout $t$ et tout $s$, la variable aléatoire $N_{t+s}-N_{s}$ suit une loi de Poisson de paramètre $\lambda t$ , (i.e)
+ $P(N_{t+s}-N_t =n)=e^{-\lambda t}\frac{({\lambda t})^n}{n!}$
+ \end{proposition}
+\subsection{La chaine de Markov à temps continue :}
+\textbf{Exemple :} le processus de poisson qu'on a définit au dessus est une chaîne de Markov à temps continue.
+\begin{definition}\ \\
+Soit $\{X(t) \quad t\in T\}$ est une chaîne de Markov à temps continue  si $T=\{t \quad 0\leq t \leq \infty\}$\\
+La chaine de Markov à temps continue vérifie la propriété suivante :
+\[ P(X(t+s)=j|X(s)=i,X(u)=u})=P(X(t+s)=j|X(t)=i) \text{ pour } s>t>u\geq 0 \]
+\end{definition}
+On a alors $P_{ij}(t,s)=\sum_{r}P_{ir}(t,u)P_{rj}(u,s)$ avec $P_{ij}(t,s)$ est la probabilité de passer de l'état $i$ à l'état $j$ pendant la période $t$ à $s$.
+\subsection{Processus de naissance et du mort :}
+Un exemple de chaîne de Markov à temps continu est le processus de naissance et du mort. Le processus de naissance et du mort est un processus stochastique ayant la propriété que le changement à travers un intervalle de temps infinitésimal $\Delta t$ est soit $-1$, $0$, ou $1$, et où l'état n
+désigne la taille de la population.\\☺
+Étant donné la taille de la population $n$, la probabilité d'une augmentation,diminution ou sans changement (dans une période de temps infinitésimal(très petite)) est:
+\begin{itemize}
+\item[•] La probabilité que la population augmente par $1$ est :
+\[P(n\rightarrow n+1 \text{ dans }(t,t+\Delta t))=\lambda_n\Delta t+o(\Delta t)\]
+\item[•] La probabilité que la population diminue par $1$ est :
+\[P(n\rightarrow n-1 \text{ dans }(t,t+\Delta t))=\mu_n\Delta t+o(\Delta t)\]
+\item[•] La probabilité que la population reste la même est :
+\[P(n\rightarrow n \text{ dans }(t,t+\Delta t))=1-(\lambda_n+\mu_n)\Delta t+o(\Delta t)\]
+\end{itemize}
+ \section{Les bases de la file d'attente:}
+ Une queue est une line d’attente, les queues sont formées a chaque fois le service est demandé et la demande dépasse la capacité, la queue se génère par des utilisateurs qui arrivent au service et après qu’ils satisfirent leurs besoin puis,ils quittent le service, le terme utilisateur n’est pas nécessairement un être humain toute unité qui a besoin de ce service est un client. \\
+Un system de file d’attente est décrite par cinq caractéristiques :
+\begin{enumerate}
+\item[1-]Schéma d’arrivé des clients.
+\item[2-]Schéma de services pour les clients 
+\item[3-]Discipline de queue
+\item[4-]Capacité de système 
+\item[5-]Nombres de canal de services
+\end{enumerate} 	
+La plupart des systèmes des queues   le schéma d’arrivé est stochastique, On veut savoir la probabilité de la distribution décrivons l’intervalle de temps (le temps entre l’arrive des client qui arrivé successivement) et aussi est ce qu’ils arrivent individuellement ou par groupe et s’il ne dépond pas du temp en l’appelle stationnaire 
+\subsection{Notations: }
+la notation standard pour décrire une queue est $A/B/X/Y/Z$,ou $A$ indique la distribution des temps d'attente, $B$ indique la distribution de probabilité décrivant le temps de service, $X$ est le nombre de voies de service parallèles,$Y$ est la restriction de la capacité du système et $Z$ est la discipline de queue, $X$ et $Y$ peut avoir une valeur de $\left [ 1,+\infty \right ]$, mais A et B sont décrites par des symboles qui représentent les distributions de probabilité.\\
+Dans le cas de la distribution générale, il n'y a aucune hypothèse quant à la forme de la distribution. Les résultats dans ces cas sont donc applicables à toutes les distributions de probabilité.Dans de nombreux cas, seuls les trois premiers symboles sont utilisés. S'il n'y a pas de restriction sur la capacité du système.
+\subsection{performance du système}
+Trois caractéristiques des systèmes présentent un intérêt. Premièrement, une mesure du temps d'attente typique d'un client ; deuxièmement, la manière dont les clients s'accumulent ; et troisièmement, une mesure du temps d'inactivité des serveurs. Comme il s'agit processus stochastiques, nous souhaitons connaître leurs distributions de probabilité, ou au moins leurs au moins leurs valeurs attendues.
+\subsection{File $M/M/1$}
+Une file d’attente $M/M/1$ est défnie par le processus stochastique suivant. On suppose que les instants d’arrivées des clients sont distribués selon un processus de Poisson d’intensité $\lambda$, et que les temps de service sont indépendants (et indépendants du processus d’arrivée) et suivent la loi
+exponentielle de paramètre $\mu$ .Les fonctions de densité pour les temps d'interarrivée et de service sont données respectivement comme : 
+\[\\ a(t) = \lambda e^{-\lambda t} \]
+\[\\ b(t) = \mu e^{-\mu t} \]
+où $1/\lambda$ est le temps moyen entre les arrivées et $1/\mu$ est le temps moyen de service. Les deux d'interception et de service sont exponentiels, et les taux d'arrivée et de service conditionnel sont d'arrivée et de service conditionnel sont de Poisson, ce qui nous donne :
+\small
+\[ P{ (\text{ une arrivée se produit dans un intervalle de longueur } \Delta t )} = \lambda \Delta t + o(\Delta t)\]
+\[ P{ (\text{  plus d'une arrivée se produit dans } \Delta t )} = o(\Delta t)\]
+\[ P{ (\text{ le service est achevé en $\Delta$t mais le système n'est pas vide} )} = \mu \Delta t + o(\Delta t)\]
+\[ P{ (\text{ plus qu'un service achevé en $\Delta$t dans plus d'un seul system} )} =  o(\Delta t)\]
+la file $M/M/1$ est un simple processus de naissance-mort avec ${\lambda_n = \lambda}$ et ${\mu_n = \mu}$ pour tout $n$. Les arrivées sont des " naissances " dans le système, tant que le système est dans l'état $n$ (l'état  réfère au nombre des clients dans le système),une arrivée d'un client augmente l'état à {$n$+1}. De même, les départs sont des "morts", partant de l'etat $n$ à l'etat $n$-1.
+\end{document}
